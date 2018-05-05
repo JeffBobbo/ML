@@ -1,13 +1,12 @@
 import weka.core.Instances;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
 /**
  * Created by james on 29/04/18.
  */
-public class Arsenal
+public class LinearPerceptronImpl
 {
   public static Instances loadData(String source) throws IOException
   {
@@ -16,12 +15,10 @@ public class Arsenal
   }
   public static void main(String[] args)
   {
-    String trainingData = "Arsenal_TRAIN.arff";
-    Instances train, test;
+    Instances data;
     try
     {
-      train = loadData(trainingData);
-      test = loadData("Arsenal_TEST.arff");
+      data= loadData("PerceptronTEST.arff");
     }
     catch (IOException e)
     {
@@ -29,10 +26,15 @@ public class Arsenal
       return;
     }
 
-    System.out.println(train.numInstances());
-    System.out.println(test.numInstances());
+    System.out.println(data.numInstances());
+    LinearPerceptron lp = new LinearPerceptron();
 
-    for (double a : test.instance(4).toDoubleArray())
-      System.out.println(a);
+    try
+    {
+      lp.buildClassifier(data);
+    } catch (Exception e)
+    {
+      e.printStackTrace();
+    }
   }
 }
