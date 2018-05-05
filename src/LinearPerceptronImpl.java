@@ -26,8 +26,8 @@ public class LinearPerceptronImpl
       return;
     }
 
-    System.out.println(data.numInstances());
-    LinearPerceptron lp = new LinearPerceptron();
+    //LinearPerceptron lp = new LinearPerceptron(-1.0, 2.0, 0.0);
+    LinearPerceptron lp = new EnhancedLinearPerceptron();//-1.0, 2.0, 0.0);
 
     try
     {
@@ -35,6 +35,9 @@ public class LinearPerceptronImpl
     } catch (Exception e)
     {
       e.printStackTrace();
+      return;
     }
+
+    System.out.println(lp.getWeightX() + ", " + lp.getWeightY());
   }
 }
