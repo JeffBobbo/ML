@@ -3,9 +3,6 @@ import weka.core.Instances;
 import java.io.FileReader;
 import java.io.IOException;
 
-/**
- * Created by james on 29/04/18.
- */
 public class LinearPerceptronImpl
 {
   public static Instances loadData(String source) throws IOException
@@ -18,7 +15,8 @@ public class LinearPerceptronImpl
     Instances data;
     try
     {
-      data= loadData("PerceptronTEST.arff");
+      data = loadData("data/balloons.arff");
+      //data = loadData("data/Perceptron.arff");
     }
     catch (IOException e)
     {
@@ -26,18 +24,23 @@ public class LinearPerceptronImpl
       return;
     }
 
-    //LinearPerceptron lp = new LinearPerceptron(-1.0, 2.0, 0.0);
-    LinearPerceptron lp = new EnhancedLinearPerceptron();//-1.0, 2.0, 0.0);
+    data.setClassIndex(data.numAttributes() - 1);
+    //LinearPerceptron lp = new LinearPerceptron();
+    LinearPerceptron lp = new EnhancedLinearPerceptron(true, EnhancedLinearPerceptron.PerceptronModel.ONLINE, false);
+    //((EnhancedLinearPerceptron)lp).useModelSelection(true);
 
     try
     {
       lp.buildClassifier(data);
-    } catch (Exception e)
+    }
+    catch (Exception e)
     {
       e.printStackTrace();
       return;
     }
 
-    System.out.println(lp.getWeightX() + ", " + lp.getWeightY());
+    double[] a = lp.getWeights();
+    for (double d : a)
+      System.out.println(d);
   }
 }

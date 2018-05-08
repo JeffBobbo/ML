@@ -6,37 +6,41 @@ public class LinearPerceptron extends AbstractClassifier
 {
   public LinearPerceptron()
   {
-    weightX = 1.0;
-    weightY = 1.0;
+    maxIterations = 10;
+    weights = null;
     bias = 0.0;
   }
-  public LinearPerceptron(double initWeightX, double initWeightY, double b)
+  public LinearPerceptron(double[] initWeights, double b)
   {
-    weightX = initWeightX;
-    weightY = initWeightY;
+    this();
+    weights = initWeights;
     bias = b;
-  }
-
-  protected double psi(Instance instance)
-  {
-    return weightX * instance.value(0) + weightY * instance.value(1);
   }
 
   @Override
   public void buildClassifier(Instances instances) throws Exception
   {
+    instances.classAttribute();
+    weights = new double[instances.numAttributes()];
+    for (int i = 0; i < weights.length; ++i)
+      weights[i] = 1.0;
     boolean fitted = false;
-    while (!fitted)
+    int it = 0;
+    while (!fitted && it++ < maxIterations)
     {
       fitted = true;
       for (Instance instance : instances)
       {
-        double yi = psi(instance);
-        if ((yi >= 0.0 && instance.value(2) < 0.0) || (yi < 0.0 && instance.value(2) >= 0.0))
+        double yi = classifyInstance(instance);
+        if ((yi >= 0.0 && instance.classValue() < 0.0) || (yi < 0.0 && instance.classValue() >= 0.0))
         {
           fitted = false;
-          weightX = weightX + 0.5 * LEARNING_RATE * (instance.value(2) - (yi >= 0.0 ? 1.0 : -1.0)) * instance.value(0) + bias;
-          weightY = weightY + 0.5 * LEARNING_RATE * (instance.value(2) - (yi >= 0.0 ? 1.0 : -1.0)) * instance.value(1) + bias;
+          for (int i = 0; i < instance.numAttributes(); ++i)
+          {
+            if (i == instance.classIndex())
+              continue;
+            weights[i] += 0.5 * LEARNING_RATE * (instance.classValue() - (yi >= 0.0 ? 1.0 : -1.0)) * instance.value(i) + bias;
+          }
         }
       }
     }
@@ -45,15 +49,20 @@ public class LinearPerceptron extends AbstractClassifier
   @Override
   public double classifyInstance(Instance instance)
   {
-    double y1 = weightX * instance.value(0) + weightY * instance.value(1);
-    return y1 >= 0.0 ? 1.0 : -1.0;
+    double y = 0.0;
+    for (int i = 0; i < instance.numAttributes(); ++i)
+    {
+      if (i == instance.classIndex())
+        continue;
+      y += weights[i] * instance.value(i);
+    }
+    return y >= 0.0 ? 1.0 : -1.0;
   }
 
-  public double getWeightX() { return weightX; }
-  public double getWeightY() { return weightY; }
+  public double[] getWeights() { return weights; }
 
   protected final double LEARNING_RATE = 1.0;
-  protected final double bias;
-  protected double weightX;
-  protected double weightY;
+  protected int maxIterations;
+  protected double[] weights;
+  protected double bias;
 }
