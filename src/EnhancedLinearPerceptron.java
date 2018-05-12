@@ -1,5 +1,8 @@
+import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
+
+import java.util.Random;
 
 public class EnhancedLinearPerceptron extends LinearPerceptron
 {
@@ -63,9 +66,10 @@ public class EnhancedLinearPerceptron extends LinearPerceptron
   {
     if (standardise)
       standardise(instances);
+    Random r = new Random();
     weights = new double[instances.numAttributes()];
     for (int i = 0; i < weights.length; ++i)
-      weights[i] = 1.0;
+      weights[i] = randomWeight();
 
     boolean fitted = false;
     int it = 0;

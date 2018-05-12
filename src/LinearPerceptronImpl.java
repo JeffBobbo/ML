@@ -15,8 +15,8 @@ public class LinearPerceptronImpl
     Instances data;
     try
     {
-      data = loadData("data/balloons.arff");
-      //data = loadData("data/Perceptron.arff");
+      //data = loadData("data/balloons.arff");
+      data = loadData("data/PerceptronTEST.arff");
     }
     catch (IOException e)
     {
@@ -26,8 +26,9 @@ public class LinearPerceptronImpl
 
     data.setClassIndex(data.numAttributes() - 1);
     //LinearPerceptron lp = new LinearPerceptron();
-    LinearPerceptron lp = new EnhancedLinearPerceptron(true, EnhancedLinearPerceptron.PerceptronModel.ONLINE, false);
+    //LinearPerceptron lp = new EnhancedLinearPerceptron(true, EnhancedLinearPerceptron.PerceptronModel.ONLINE, false);
     //((EnhancedLinearPerceptron)lp).useModelSelection(true);
+    LinearPerceptronEnsemble lp = new LinearPerceptronEnsemble();
 
     try
     {
@@ -39,8 +40,8 @@ public class LinearPerceptronImpl
       return;
     }
 
-    double[] a = lp.getWeights();
-    for (double d : a)
-      System.out.println(d);
+    //double[] a = lp.getWeights();
+    //for (double d : a)
+      //System.out.println(d);
   }
 }

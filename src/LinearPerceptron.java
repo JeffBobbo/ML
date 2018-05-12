@@ -2,6 +2,8 @@ import weka.classifiers.AbstractClassifier;
 import weka.core.Instance;
 import weka.core.Instances;
 
+import java.util.Random;
+
 public class LinearPerceptron extends AbstractClassifier
 {
   public LinearPerceptron()
@@ -9,12 +11,7 @@ public class LinearPerceptron extends AbstractClassifier
     maxIterations = 10;
     weights = null;
     bias = 0.0;
-  }
-  public LinearPerceptron(double[] initWeights, double b)
-  {
-    this();
-    weights = initWeights;
-    bias = b;
+    r = new Random();
   }
 
   @Override
@@ -23,7 +20,12 @@ public class LinearPerceptron extends AbstractClassifier
     instances.classAttribute();
     weights = new double[instances.numAttributes()];
     for (int i = 0; i < weights.length; ++i)
-      weights[i] = 1.0;
+    {
+      if (i == instances.classIndex())
+        weights[i] = 0.0;
+      else
+        weights[i] = randomWeight();
+    }
     boolean fitted = false;
     int it = 0;
     while (!fitted && it++ < maxIterations)
@@ -59,10 +61,20 @@ public class LinearPerceptron extends AbstractClassifier
     return y >= 0.0 ? 1.0 : -1.0;
   }
 
+  protected double randomWeight()
+  {
+    return r.nextInt(10) + 1;
+  }
+
   public double[] getWeights() { return weights; }
+  public void setBias(double b) { bias = b; }
+  public double getBias() { return bias; }
+
 
   protected final double LEARNING_RATE = 1.0;
   protected int maxIterations;
   protected double[] weights;
   protected double bias;
+
+  private Random r;
 }
