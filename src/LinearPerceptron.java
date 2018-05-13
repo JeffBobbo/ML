@@ -8,16 +8,14 @@ public class LinearPerceptron extends AbstractClassifier
 {
   public LinearPerceptron()
   {
-    maxIterations = 10;
+    maxIterations = 25;
     weights = null;
     bias = 0.0;
-    r = new Random();
   }
 
   @Override
   public void buildClassifier(Instances instances) throws Exception
   {
-    instances.classAttribute();
     weights = new double[instances.numAttributes()];
     for (int i = 0; i < weights.length; ++i)
     {
@@ -63,7 +61,7 @@ public class LinearPerceptron extends AbstractClassifier
 
   protected double randomWeight()
   {
-    return r.nextInt(10) + 1;
+    return 1.0;
   }
 
   public double[] getWeights() { return weights; }
@@ -75,6 +73,4 @@ public class LinearPerceptron extends AbstractClassifier
   protected int maxIterations;
   protected double[] weights;
   protected double bias;
-
-  private Random r;
 }

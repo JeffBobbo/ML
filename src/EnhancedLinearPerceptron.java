@@ -23,14 +23,6 @@ public class EnhancedLinearPerceptron extends LinearPerceptron
     modelSel = false;
   }
 
-  public EnhancedLinearPerceptron(boolean std, PerceptronModel m, boolean sel)
-  {
-    this();
-    standardise = std;
-    model = m;
-    modelSel = sel;
-  }
-
   private double mean(final Instances instances, final int attr)
   {
     return instances.meanOrMode(attr);
@@ -66,7 +58,6 @@ public class EnhancedLinearPerceptron extends LinearPerceptron
   {
     if (standardise)
       standardise(instances);
-    Random r = new Random();
     weights = new double[instances.numAttributes()];
     for (int i = 0; i < weights.length; ++i)
       weights[i] = randomWeight();
@@ -99,7 +90,6 @@ public class EnhancedLinearPerceptron extends LinearPerceptron
   @Override
   public void buildClassifier(Instances instances) throws Exception
   {
-    instances.classAttribute();
     if (standardise)
       standardise(instances);
 
@@ -163,7 +153,9 @@ public class EnhancedLinearPerceptron extends LinearPerceptron
         if (r >= 0.0 && inst.classValue() >= 0.0 || r < 0.0 && inst.classValue() < 0.0)
           ++onlineCorrect;
       }
-      elp = new EnhancedLinearPerceptron(standardise, PerceptronModel.OFFLINE, false);
+      elp = new EnhancedLinearPerceptron();
+      elp.useStandardization(standardise);
+      elp.useModel(PerceptronModel.OFFLINE);
       elp.buildClassifier(train);
       for (Instance inst : test)
       {
@@ -181,17 +173,16 @@ public class EnhancedLinearPerceptron extends LinearPerceptron
     return onlineVotes > offlineVotes ? PerceptronModel.ONLINE : PerceptronModel.OFFLINE;
   }
 
-  public void useModelSelection(boolean b)
-  {
-    modelSel = b;
-  }
+  public void useStandardization(boolean s) { standardise = s; }
+  public void useModel(PerceptronModel m) { model = m; }
+  public void useModelSelection(boolean b) { modelSel = b; }
 
-  // standardize inputs (0 mean and 1 std dev), defaults to true
-  private boolean standardise;
   private double[] mean;
   private double[] variance;
   private int count;
 
+  // standardize inputs (0 mean and 1 std dev), defaults to true
+  private boolean standardise;
   // use online or offline, defaults to online
   private PerceptronModel model;
   // determine whether to use online or offline based on which is more accurate, defaults to false

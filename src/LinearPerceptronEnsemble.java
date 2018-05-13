@@ -19,8 +19,6 @@ public class LinearPerceptronEnsemble extends AbstractClassifier
   @Override
   public void buildClassifier(Instances instances) throws Exception
   {
-    instances.classAttribute();
-
     for (int i = 0; i < ensembleSize; ++i)
     {
       RandomSubset f = new RandomSubset();
