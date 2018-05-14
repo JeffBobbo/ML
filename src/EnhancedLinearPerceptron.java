@@ -169,7 +169,6 @@ public class EnhancedLinearPerceptron extends LinearPerceptron
       else
         ++offlineVotes;
     }
-    System.out.println(onlineVotes > offlineVotes ? "ONLINE" : "OFFLINE");
     return onlineVotes > offlineVotes ? PerceptronModel.ONLINE : PerceptronModel.OFFLINE;
   }
 
